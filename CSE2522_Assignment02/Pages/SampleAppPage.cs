@@ -1,36 +1,32 @@
 ﻿using OpenQA.Selenium;
 
-namespace UIAutomationTests.Pages
+namespace CSE2522_Assignment02.Pages
 {
     public class SampleAppPage
     {
-        private readonly IWebDriver _driver;
+        private readonly IWebDriver driver;
 
-        // Locators based on requirements 
-        private readonly By _username = By.Name("UserName");
-        private readonly By _password = By.Name("Password");
-        private readonly By _loginButton = By.Id("login");
-        private readonly By _statusMessage = By.Id("loginstatus");
+        public SampleAppPage(IWebDriver driver) => this.driver = driver;
 
-        public SampleAppPage(IWebDriver driver) => _driver = driver;
+        private IWebElement UserNameField => driver.FindElement(By.Name("UserName"));
+        private IWebElement PasswordField => driver.FindElement(By.Name("Password"));
+        private IWebElement LoginButton => driver.FindElement(By.Id("login"));
+        private IWebElement LoginStatus => driver.FindElement(By.Id("loginstatus"));
 
-        // Verification for TC002_1
-        public bool IsLoginPageDisplayed()
+        public void Open() => driver.Navigate().GoToUrl("https://uitestingplayground.com/sampleapp");
+
+        public bool AreElementsDisplayed() =>
+            UserNameField.Displayed && PasswordField.Displayed && LoginButton.Displayed;
+
+        public void Login(string username, string password)
         {
-            return _driver.FindElement(_username).Displayed &&
-                   _driver.FindElement(_password).Displayed &&
-                   _driver.FindElement(_loginButton).Displayed;
+            UserNameField.Clear();
+            UserNameField.SendKeys(username);
+            PasswordField.Clear();
+            PasswordField.SendKeys(password);
+            LoginButton.Click();
         }
 
-        public void Login(string user, string pass)
-        {
-            _driver.FindElement(_username).Clear();
-            _driver.FindElement(_username).SendKeys(user);
-            _driver.FindElement(_password).Clear();
-            _driver.FindElement(_password).SendKeys(pass);
-            _driver.FindElement(_loginButton).Click();
-        }
-
-        public string GetStatusText() => _driver.FindElement(_statusMessage).Text;
+        public string GetStatusMessage() => LoginStatus.Text;
     }
 }
