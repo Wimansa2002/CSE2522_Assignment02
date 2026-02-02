@@ -37,6 +37,7 @@ namespace CSE2522_Assignment02.Pages
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             return wait.Until(d => d.SwitchTo().Alert()).Text.Trim();
+
         }
     }
 }

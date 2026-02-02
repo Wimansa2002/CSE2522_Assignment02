@@ -22,8 +22,8 @@ namespace CSE2522_Assignment02.Tests
         {
             var page = new SampleAppPage(driver!);
             page.Open();
-            page.Login("JohnDoe", "pwd");
-            Assert.That(page.GetStatusMessage(), Is.EqualTo("Welcome, JohnDoe!"));
+            page.Login("Wimansa", "pwd");
+            Assert.That(page.GetStatusMessage(), Is.EqualTo("Welcome, Wimansa!"));
         }
 
         [Test]

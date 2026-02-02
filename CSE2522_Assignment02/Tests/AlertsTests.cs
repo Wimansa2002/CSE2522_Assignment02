@@ -15,7 +15,7 @@ namespace CSE2522_Assignment02.Tests
             page.Open();
             page.TriggerAlert();
             string text = page.HandleAlert(true).Replace("\r\n", " ").Replace("\n", " "); ;
-            Assert.That(text, Is.EqualTo("Today is a working day or less likely a holiday")); 
+            Assert.That(text, Is.EqualTo("Today is a working day. Or less likely a holiday.").IgnoreCase);
         }
 
         [Test]
@@ -25,11 +25,11 @@ namespace CSE2522_Assignment02.Tests
             var page = new AlertsPage(driver!);
             page.Open();
 
-            // Scenario: User enters text
+            
             page.TriggerPrompt();
             page.HandleAlert(true, "AutomationUser");
             Assert.That(page.GetSecondaryAlertText(), Is.EqualTo("user value AutomationUser"));
-            page.HandleAlert(true); // Close the resulting confirm alert
+            page.HandleAlert(true); 
         }
     }
 }

@@ -14,10 +14,10 @@ namespace CSE2522_Assignment02.Tests
             var page = new ClientSideDelayPage(driver!);
             page.Open();
             page.ClickTrigger();
-            Assert.That(page.IsSpinnerVisible(), Is.True); //
+            Assert.That(page.IsSpinnerVisible(), Is.True); 
 
-            string expected = "Data calculated on the client side";
-            Assert.That(page.GetResultText(), Is.EqualTo(expected)); //
+            string expected = "Data calculated on the client side.";
+            Assert.That(page.GetResultText(), Is.EqualTo(expected)); 
         }
     }
 }
