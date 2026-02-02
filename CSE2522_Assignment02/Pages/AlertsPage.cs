@@ -2,42 +2,73 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
+
 namespace CSE2522_Assignment02.Pages
 {
     public class AlertsPage
     {
         private readonly IWebDriver driver;
+
         public AlertsPage(IWebDriver driver) => this.driver = driver;
+
+        private IWebElement AlertButton => driver.FindElement(By.Id("alertButton"));
+        private IWebElement ConfirmButton => driver.FindElement(By.Id("confirmButton"));
+        private IWebElement PromptButton => driver.FindElement(By.Id("promptButton"));
 
         public void Open() => driver.Navigate().GoToUrl("https://uitestingplayground.com/alerts");
 
-        public void TriggerAlert() => driver.FindElement(By.Id("alertButton")).Click();
-        public void TriggerConfirm() => driver.FindElement(By.Id("confirmButton")).Click();
-        public void TriggerPrompt() => driver.FindElement(By.Id("promptButton")).Click();
+        public bool AreElementsDisplayed() =>
+            AlertButton.Displayed && ConfirmButton.Displayed && PromptButton.Displayed;
+
+        public void TriggerAlert() => AlertButton.Click();
+
+        public void TriggerConfirm() => ConfirmButton.Click();
+
+        public void TriggerPrompt() => PromptButton.Click();
 
         public string HandleAlert(bool accept, string? inputText = null)
         {
-            // Stabilization: Wait for alert presence to avoid NoAlertPresentException
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            IAlert alert = wait.Until(d => {
-                try { return d.SwitchTo().Alert(); }
-                catch (NoAlertPresentException) { return null; }
-            })!;
+            IAlert alert = driver.SwitchTo().Alert();
+            string alertText = alert.Text;
 
-            string text = alert.Text.Trim(); // Trim handles hidden character mismatches
-            if (inputText != null) alert.SendKeys(inputText);
+            if (inputText != null)
+            {
+                alert.SendKeys(inputText);
+            }
 
-            if (accept) alert.Accept();
-            else alert.Dismiss();
+            if (accept)
+            {
+                alert.Accept();
+            }
+            else
+            {
+                alert.Dismiss();
+            }
 
-            return text;
+            return alertText;
         }
 
         public string GetSecondaryAlertText()
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            return wait.Until(d => d.SwitchTo().Alert()).Text.Trim();
+            // Wait for the second alert to appear
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            wait.Until(d => IsAlertPresent());
 
+            IAlert alert = driver.SwitchTo().Alert();
+            return alert.Text;
+        }
+
+        private bool IsAlertPresent()
+        {
+            try
+            {
+                driver.SwitchTo().Alert();
+                return true;
+            }
+            catch (NoAlertPresentException)
+            {
+                return false;
+            }
         }
     }
 }
